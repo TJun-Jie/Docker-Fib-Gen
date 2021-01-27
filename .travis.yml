@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  -docker build -t jjtai/react-test -f ./client/Dockerfile.dev
+script:
+  - docker run -e CI=true jjtai/react-test npm test
+
+after_success:
+  - docker build -t jjtai/fib-client ./client
+  - docker build -t jjtai/fib-nginx ./nginx
+  - docker build -t jjtai/fib-server ./server
+  - docker build -t jjtai/fib-worker ./worker
+  #Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # push image to docker
+  - docker push jjtai/fib-client
+  - docker push jjtai/fib-nginx
+  - docker push jjtai/fib-server
+  - docker push jjtai/fib-worker
+  
