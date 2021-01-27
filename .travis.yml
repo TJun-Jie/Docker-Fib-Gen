@@ -19,3 +19,15 @@ after_success:
   - docker push jjtai/fib-nginx
   - docker push jjtai/fib-server
   - docker push jjtai/fib-worker
+
+  deploy:
+    provider: elasticbeanstalk
+    region: ap-southeast-1
+    app: multi-docker-fib
+    env: Multidockerfib-env
+    bucket_name: elasticbeanstalk-ap-southeast-1-200250313593
+    bucket_path: docker-multi
+    on:
+      branch: main
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
